@@ -4,41 +4,46 @@
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
-	{{form.as_p}}
+
 	<script type="text/javascript" src="https://developer.mozilla.org/En/DragDrop/DataTransfer"></script>
 <!-- Drag and Drop form-->
-<div id="output" style="min-height: 200px; white-space: pre; border: 1px solid black;"
-     ondragenter="document.getElementById('output').textContent = 'Drop files here.'; event.stopPropagation(); event.preventDefault(); "
+<br>
+<br>
+<br>
+<font size="5" color="green" style="margin-left:5%" >Upload data</font>
+<div id="output" style="min-height: 200px; white-space: pre; border: 2px dashed grey;margin-left:5%;margin-right:5%;"
+     ondragenter="document.getElementById('output').textContent = 'Let go.'; event.stopPropagation(); event.preventDefault(); "
      ondragover="event.stopPropagation(); event.preventDefault(); 
      "
      ondrop="event.stopPropagation(); event.preventDefault();
      dodrop(event);">
-     Drop your DusTrak and GPS files here
+     <div align="center" color ="grey" >Drop your files here <br> <font size="1"> Files must be from DusTrak and GPS devices. </font></div>
 </div>
 <br>
 <br>
 <!-- Manual Upload Form-->
 <kd style='margin-top:0;margin-left:25%;margin-right:25%;'>
-          <font size="4">or find files on your computer:</font>
+          <div align="center" ><font size="4">Or</font> 
           <br>
-          <ka style='margin-top:0;margin-left:25%;margin-right:25%;'>
-          <font size="2">1. Click the Browse button. 2. Select a csv and log file that are part of the same air pollution survey. <br> <kb style='margin-top:0;margin-left:25%;margin-right:25%;'> (These should be in the same folder). 3. Click on the open button on the lower right side of the pop up. <br> <kb style='margin-top:0;margin-left:25%;margin-right:25%;'> 4. Click the Upload Button</font>
-        </kb>
-      </ka>
-          <kz>
+          
+
+        
+      
+         
             <!-- Upload form, as  of now more than 2 files are allowed but causes program to not work if there are multiple files with extension .csv or .log-->
-            <form id="upload-form" method="POST" enctype="multipart/form-data"style="margin-left: 25%; margin-right: 25%;">
+            <form id="upload-form" method="POST" enctype="multipart/form-data"style="margin-right: 25%;" action = "{% url "woeip.apps.air_quality.views.upload" %}" method = "POST">
               <!-- Allows upload of files -->
                 <input type="file" name="file" multiple>
                 <!-- Submit button -->
-                <input type="submit" value="Upload">
+                <input type="submit" value="Find files on your computer.">
                 
             </form>
 
     
-          </kz>
+          
 
-        </kd>
+        
+    </div>
 <!-- Code for drag and drop -->
 <script type="text/javascript">
 	Array.prototype.contains = function ( needle ) {
@@ -49,7 +54,7 @@
 	}
 	function ondrag(event)
 	{
-		output("Drop files here.");
+		output("Let go.");
 	}
 
 	function dodrop(event)
@@ -114,6 +119,7 @@
 	  document.getElementById("output").textContent = text;
 	  //dump(text);
 	}
+	//Gets extension for the file
 	function getext(filename)
 	{
 		return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
@@ -122,7 +128,8 @@
 	// AJAX for posting
 	function create_post(air_quality,gps) {
 	    console.log("create post is working!") 
-	    $.ajax({
+
+	    /*$.ajax({
 	        url : "/files/upload/", // the endpoint
 	        type : "POST", // http method
 	        data : { air_Quality : air_quality }, // data sent with the post request
@@ -161,7 +168,7 @@
 	                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
 	            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 	        }
-	    });
+	    });*/
 	};
 
 	
