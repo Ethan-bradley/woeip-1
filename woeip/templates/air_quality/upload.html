@@ -3,15 +3,6 @@
 
 <font size="5" color="green" style="margin-left:5%" >Upload data</font>
 
-<<<<<<< HEAD
-<div id="output" style="min-height: 200px; white-space: pre; border: 2px dashed grey;margin-left:5%;margin-right:5%;"
-     ondragenter="document.getElementById('output').textContent = 'Let go.'; event.stopPropagation(); event.preventDefault(); "
-     ondragover="event.stopPropagation(); event.preventDefault(); 
-     "
-     ondrop="event.stopPropagation(); event.preventDefault();
-     dodrop(event); action = '{% url 'upload' %}'; method = 'POST' ">
-     <div align="center" color ="grey" >Drop your files here <br> <font size="1"> Files must be from DusTrak and GPS devices. </font></div>
-=======
 
 <form name="form" enctype="multipart/form-data" action="{% url 'upload' %}" method="POST">
 <div id="output" style="min-height: 200px; white-space: pre;
@@ -25,172 +16,51 @@
      <div align="center" color="grey">Drop your files here <br> <font size="1">
      Files must be from DusTrak and GPS devices. </font>
  </div>
->>>>>>> 287b8bccd785f04cfa5d496b871318eada32d041
+
 </div>
 
 <br>
 <br>
 
+
+
 <!-- Manual Upload Form-->
-<<<<<<< HEAD
-<kd style='margin-top:0;margin-left:25%;margin-right:25%;'>
-          <div align="center" ><font size="4">Or</font> 
-          <br>
-            <!-- Upload form, as  of now more than 2 files are allowed but causes program to not work if there are multiple files with extension .csv or .log-->
-            <form id="upload-form" enctype="multipart/form-data" action = "{% url 'upload' %}" method = "POST" style="margin-right: 25%;">{% csrf_token %}
-              <!-- Allows upload of files -->
-                <input id="file-upload" type="file" name="file" multiple>
-                <!-- Submit button -->
-                <input type="submit" value="Find files on your computer.">
-                
-            </form>
-
-    
-          
-
-        
-    </div>
-<!-- Code for drag and drop -->
-<script type="text/javascript">
-	Array.prototype.contains = function ( needle ) {
-	   for (i in this) {
-	      if (this[i] == needle) return true;
-	   }
-	   return false;
-	}
-	function ondrag(event)
-	{
-		output("Let go.");
-	}
-
-	function dodrop(event)
-	{
-	  var maxFileSize = 100000000000000000000000000000000000000000000000000000000000000000000000000000;
-	  var count = 0;
-	  var dt = event.dataTransfer;
-	  var files = dt.files;
-	  var extensions = ['','','','','','',''];
-	  var count = files.length;
-	  output("File Count: " + count + "\n");
-	  var numbers = [null,null];
-	  //output("extensions"+extensions.length)
-	  	if (files.length >= 2) {
-	  		//output("File Count: " + count + "\n");
-	  		for (var i = 0; i < files.length; i++) {
-	  			//output(files[i].name)
-	  			extensions[i] = getext(files[i].name);
-	  			if (extensions[i] == 'log') {
-	  				numbers[0] = i;
-	  			} else if (extensions[i] == 'csv') {
-	  				numbers[1] = i;
-	  			} 
-	  			//output(extensions[i]+" ")
-
-	    	}
-	    	
-	    	if (extensions.contains('log') && extensions.contains('csv')) {
-	    		//output(extensions);
-	    		output("Uploading...")
-	    		air_quality = files[numbers[1]];
-		    	gps = files[numbers[0]];
-		    	create_post(air_quality,gps);
-	    		/*if (calculatefileSize(files) < maxFileSize) {
-		    		air_quality = files[numbers[1]];
-		    		gps = files[numbers[0]];
-		    		create_post(air_quality,gps);
-	    	    } else {
-	    	    	output("File size is larger than max file size.")
-	    	    }*/	
-
-	    	} else {
-	    		output("Incorrect file types. Takes 1 csv and 1 gps log file.");
-	    	}
-
-	  	} else {
-	  		output("Requires two files, a csv and a log file.");
-	  	}
-	    
-	}
-	function calculatefileSize(files) 
-	{
-		var totalsize = files[0];
-		for (var i =1; i < files.length; i++) {
-			totalsize += files[i].size;
-		}
-		return totalsize;
-	}
-
-	function output(text)
-	{
-	  document.getElementById("output").textContent = text;
-	  //dump(text);
-	}
-	//Gets extension for the file
-	function getext(filename)
-	{
-		return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
-	}
-
-	// AJAX for posting
-	function create_post(air_quality,gps) {
-	    console.log("create post is working!");
-	    //var files2 = [air_quality,gps];
-	    document.getElementById("file-upload") = [air_quality,gps];
-	    document.getElementById("upload-form").submit();
-	    
-	    /*$.ajax({
-	        url : "/files/upload/", // the endpoint
-	        type : "POST", // http method
-	        data : { air_Quality : air_quality }, // data sent with the post request
-	        processData: false, 
-	        contentType: false,
-	        // handle a successful response
-	        success : function(json) {
-	            
-	            console.log(json); // log the returned json to the console
-	            console.log("success"); 
-	        },
-
-	        // handle a non-successful response
-	        error : function(xhr,errmsg,err) {
-	            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-	                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-	            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-	        }
-	    });
-	    $.ajax({
-	        url : "/files/upload/", // the endpoint
-	        type : "POST", // http method
-	        data : { GPS : gps }, // data sent with the post request
-	        processData: false, 
-	        contentType: false,
-	        // handle a successful response
-	        success : function(json) {
-	            $('#post-text').val(''); // remove the value from the input
-	            console.log(json); // log the returned json to the console
-	            console.log("success"); 
-	        },
-
-	        // handle a non-successful response
-	        error : function(xhr,errmsg,err) {
-	            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-	                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-	            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-	        }
-	    });*/
-	};
-
-	
-=======
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">Submit</button>
 </form>
 
+<div class="input-container">
+  <input type="file" id="real-input" multiple="">
+  <button class="browse-btn">
+    Find Files on your computer.
+  </button>
+  <span class="file-info"></span>
+</div>
 
 <!-- Code for drag and drop -->
 <script type="text/javascript">
+//Script for manual upload form:
+const uploadButton = document.querySelector('.browse-btn');
+const fileInfo = document.querySelector('.file-info');
+const realInput = document.getElementById('real-input');
+
+uploadButton.addEventListener('click', () => {
+  realInput.click();
+});
+
+realInput.addEventListener('change', () => {
+  const name = realInput.value.split(/\\|\//).pop();
+  const truncated = name.length > 20 
+    ? name.substr(name.length - 20) 
+    : name;
+  
+  fileInfo.innerHTML = truncated;
+});
+
+
+//Everything else:
     Array.prototype.contains = function ( needle ) {
        var array = this;
        for (var i in array) {
@@ -198,12 +68,10 @@
        }
        return false;
     };
-
     function ondrag(event)
     {
         displayText("Let go.");
     }
-
     function doDrop(event)
     {
       var maxFileSize = 100000000000000000000000000000000000000000000000000000000000000000000000000000;
@@ -213,7 +81,6 @@
       var fileIndices = [null, null];
       fileCount = files.length;
       displayText("File Count: " + fileCount + "\n");
-
       if (fileCount == 2) {
         for (var i = 0; i < fileCount; i++) {
             extension = getExt(files[i].name);
@@ -223,7 +90,6 @@
                 fileIndices[1] = i;
             }
         }
-
         if (~fileIndices.contains(null)) {
             displayText("Uploading...");
             if (calculateFileSize(files) < maxFileSize) {
@@ -233,13 +99,10 @@
             } else {
                 displayText("File size is larger than max file size.");
             }
-
         } else {
             displayText("Incorrect file types. Takes 1 csv and 1 gps log file.");
         }
-
         }
-
     }
     function calculateFileSize(files)
     {
@@ -249,20 +112,16 @@
         }
         return totalsize;
     }
-
     function displayText(text) {
       document.getElementById("output").textContent = text;
     }
-
     //Gets extension for the file
     function getExt(filename) {
         return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
     }
-
     // AJAX for posting
     function createPost(air_quality,gps) {
         console.log("create post is working!");
-
         /*$.ajax({
             url : "/files/upload/", // the endpoint
             type : "POST", // http method
@@ -271,11 +130,9 @@
             contentType: false,
             // handle a successful response
             success : function(json) {
-
                 console.log(json); // log the returned json to the console
                 console.log("success");
             },
-
             // handle a non-successful response
             error : function(xhr,errmsg,err) {
                 $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
@@ -295,7 +152,6 @@
                 console.log(json); // log the returned json to the console
                 console.log("success");
             },
-
             // handle a non-successful response
             error : function(xhr,errmsg,err) {
                 $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
@@ -304,8 +160,59 @@
             }
         });*/
     }
-
-
->>>>>>> 287b8bccd785f04cfa5d496b871318eada32d041
 </script>
+
+<style type="text/css">
+    body {
+  font-family: sans-serif;
+}
+
+.input-container {
+  margin: 3em auto;
+  max-width: 300px;
+  background-color: #EDEDED;
+  border: 1px solid #595959;
+  border-radius: 5px;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.file-info {
+  font-size: 0.9em;
+}
+
+.browse-btn {
+
+  color:   #595959;
+  min-height: 35px;
+  padding: 10px;
+  border: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.browse-btn:hover {
+  background: #4ec0b4;
+}
+
+@media (max-width: 300px) {
+  button {
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0;
+  }
+  
+  .file-info {
+    display: block;
+    margin: 10px 5px;
+  }
+}
+
+input[type='file'] {
+  display: none;
+}
+</style>
 {% endblock %}
+
